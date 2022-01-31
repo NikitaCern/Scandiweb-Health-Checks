@@ -1,5 +1,6 @@
 import time
 import requests
+import sys
 import shutil
 import tempfile
 from selenium import webdriver
@@ -18,6 +19,7 @@ def check_health(url):
         page_source, console_output, networking, backendPerformance= page_load(url)
     except:
         print (color_red("Cannot connect to website"))
+        print(color_red(f"Error: {sys.exc_info()}"))
         return  
 
     url = url[:-1]
@@ -41,7 +43,7 @@ def page_load(url):
     capabilities['goog:loggingPrefs'] = { 'browser':'ALL'}
     capabilities['goog:loggingPrefs'] = { "performance":"ALL" }
 
-    driver = webdriver.Chrome(chrome_options=options, desired_capabilities=capabilities)
+    driver = webdriver.Chrome(executable_path='/home/scandiweb/github/Scandiweb-Health-Checks/chromedriver', chrome_options=options, desired_capabilities=capabilities)
     driver.get(url)
     time.sleep(10)
     
