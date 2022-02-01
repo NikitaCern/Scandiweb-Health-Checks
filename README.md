@@ -28,6 +28,7 @@ You need to have python3 installed. You can do this with the following command:
 Chrome: https://www.google.com/chrome/
 
 Make sure to note the major version of it, (96, 97, 98, 99 etc)
+
 Can be checked in this url: chrome://settings/help
 
 4. Download the matching version of  chromedriver and extract it to the root project folder (where run.py is)
