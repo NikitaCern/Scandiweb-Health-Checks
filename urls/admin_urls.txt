@@ -1,0 +1,4 @@
+/admin
+/magento
+/magento/admin
+/backend

@@ -1,0 +1,5 @@
+/dev
+/.git
+/admin
+/app/etc/local.xml
+/info.php

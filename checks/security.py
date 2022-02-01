@@ -5,7 +5,6 @@ import json
 import ssl, socket
 from print_helper import category, color, show_error, dark
 
-
 def check_security(url):
     print(category("Checking security:"))
     magento_admin_url(url)
@@ -14,9 +13,28 @@ def check_security(url):
     admin_users()
     non_commited_changes()
 
+def get_urls_to_check(filename):
+    urls = []
+    try:
+        with open(f"urls/{filename}", "r") as file:
+            lines = file.readlines()
+        for line in lines:
+            urls.append(line.replace("\n", ""))
+    except:
+        show_error()
+    return urls
+
 def magento_admin_url(url):
     print("\tMagento admin url:")
-    danger_list = ['/admin', '/magento', '/magento/admin', '/backend']
+
+    filepath = 'admin_urls.txt'
+
+    danger_list = get_urls_to_check(filepath)
+    if len(danger_list) < 0:
+        print(color(
+            f"{filepath} is empty!",
+            "red"))
+        return
 
     for item in danger_list:
         temp_url = url + item
@@ -29,7 +47,15 @@ def magento_admin_url(url):
 
 def sensitive_urls(url):
     print("\tSensitive urls:")
-    danger_list = ['/dev', '/.git', '/admin', '/rss', '/app/etc/local.xml', '/info.php']
+
+    filepath = 'sensitive_urls.txt'
+
+    danger_list = get_urls_to_check(filepath)
+    if len(danger_list) < 0:
+        print(color(
+            f"{filepath} is empty!",
+            "red"))
+        return
 
     for item in danger_list:
         temp_url = url + item
@@ -62,9 +88,12 @@ def SSL_expiration(url):
 
         text_color = "green"
 
-        if months_to_expiration <= 5: text_color="cyan"
-        if months_to_expiration <= 3: text_color="yellow"
-        if months_to_expiration <= 2: text_color="red"
+        if months_to_expiration <= 5:
+            text_color="cyan"
+        if months_to_expiration <= 3:
+            text_color="yellow"
+        if months_to_expiration <= 2:
+            text_color="red"
 
         print(color(
                 f"Good for ~{months_to_expiration} months [{cert_expires.strftime('%d %b %Y')}]",
