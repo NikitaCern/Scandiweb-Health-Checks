@@ -2,7 +2,7 @@
 
 A tool to simplify monthly health checks
 
-### 0. Prerequisits
+### 0. Prerequisites
 
 You need to have python3 installed. You can do this with the following command:
 
