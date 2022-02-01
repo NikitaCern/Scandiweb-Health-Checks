@@ -1,5 +1,4 @@
-
-from print_helper import category, color_text
+from print_helper import category, color, dark
 
 
 def check_server(url):
@@ -10,17 +9,17 @@ def check_server(url):
     disk_space()
     
 def error_log():
-    print(color_text("\tError logs:","grey"))
+    print(dark("\tError logs:"))
     pass
 
 def db_backup():
-    print(color_text("\tDB backups:","grey"))
+    print(dark("\tDB backups:"))
     pass
 
 def cron_health():
-    print(color_text("\tCron health:","grey"))
+    print(dark("\tCron health:"))
     pass
 
 def disk_space():
-    print(color_text("\tDisk space:","grey"))
+    print(dark("\tDisk space:"))
     pass

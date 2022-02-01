@@ -3,7 +3,7 @@ import requests
 import datetime
 import json
 import ssl, socket
-from print_helper import category, color_green, color_red, color_text, color_yellow
+from print_helper import category, color, show_error, dark
 
 
 def check_security(url):
@@ -17,36 +17,43 @@ def check_security(url):
 def magento_admin_url(url):
     print("\tMagento admin url:")
     danger_list = ['/admin', '/magento', '/magento/admin', '/backend']
-    try:
-        for item in danger_list:
-            temp_url = url + item
+    
+    for item in danger_list:
+        temp_url = url + item
+        try:
             r = requests.get(temp_url)
-            if r.status_code is 200:
-                print(f"\t {color_red(r)} {r.url}")
-    except:
-        print(color_red(f"Error: {sys.exc_info()[0]}"))
-
+            if r.status_code == 200:
+                print(f"\t {color(r, 'red')} {r.url}")
+        except:
+            show_error()
+            
+        
 def sensitive_urls(url):
     print("\tSensitive urls:")
     danger_list = ['/dev', '/.git', '/admin', '/rss', '/app/etc/local.xml', '/info.php']
-    try:
-        for item in danger_list:
-            temp_url = url + item
+
+    for item in danger_list:
+        temp_url = url + item
+        try:
             r = requests.get(temp_url)
-            if r.status_code is 200:
-                print(f"\t {color_red(r)} {r.url}")
+            if r.status_code == 200:
+                print(f"\t {color(r, 'red')} {r.url}")
             else:
-                print(f"\t {color_green(r)} {r.url}")
-    except:
-        print(color_red(f"Error: {sys.exc_info()[0]}"))
+                print(f"\t {color(r, 'green')} {r.url}")
+        except:
+            show_error()
+
 
 def SSL_expiration(url):
     print("\tSSL expiration: ", end="")
+
+    hostname = url[12:]
+    port = '443'
+
     try:
         socket.getaddrinfo('127.0.0.1', 8080)
-        hostname = url[12:]
-        port = '443'
         context = ssl.create_default_context()
+
         with socket.create_connection((hostname, port)) as sock:
             with context.wrap_socket(sock, server_hostname = hostname) as ssock:
                 certificate = ssock.getpeercert()
@@ -54,21 +61,21 @@ def SSL_expiration(url):
         certExpires = datetime.datetime.strptime(certificate['notAfter'], '%b %d %H:%M:%S %Y %Z')
         monthsToExpiration = round((certExpires - datetime.datetime.now()).days/30)
 
-        color = "green"
+        text_color = "green"
 
-        if monthsToExpiration <= 5: color="cyan"
-        if monthsToExpiration <= 3: color="yellow"
-        if monthsToExpiration <= 2: color="red"
+        if monthsToExpiration <= 5: text_color="cyan"
+        if monthsToExpiration <= 3: text_color="yellow"
+        if monthsToExpiration <= 2: text_color="red"
         
-        print(color_text(f"Good for ~{monthsToExpiration} months [{certExpires.strftime('%d %b %Y')}]", color))
+        print(color(f"Good for ~{monthsToExpiration} months [{certExpires.strftime('%d %b %Y')}]", text_color))
 
     except:
-        print(color_red(f"Error: {sys.exc_info()[0]}"))
+        show_error()
 
 def admin_users():
-    print(color_text("\tAdmin users:","grey"))
+    print(dark("\tAdmin users:"))
     pass
 
 def non_commited_changes():
-    print(color_text("\tNon-commited changes:","grey"))
+    print(dark("\tNon-commited changes:"))
     pass

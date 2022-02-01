@@ -1,9 +1,5 @@
-import time
-import requests
-import json
-from print_helper import category, color_cyan, color_text, color_yellow
-import pyperclip
-
+from urllib.parse import quote
+from print_helper import category, color, dark
 
 def check_performance(url, backendPerformance):
     print(category("Checking performance:"))
@@ -13,10 +9,17 @@ def check_performance(url, backendPerformance):
 def TTFB(url, backendPerformance):
     print("\tTTFB:", end = "")
 
-    print(color_yellow(f" {backendPerformance} ms"))
+    print(color(f" {backendPerformance} ms", "yellow"))
     pass
 
 def page_insight(url):
-    print(color_text("\tPage Insight:","grey"))
-    pass
-    page_insight_api_url = f"https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url={url}"
+    print("\tPage Insight: ", end = "")
+
+    url = quote(url, safe ='')
+
+    page_insight_url = f"https://pagespeed.web.dev/report?url={url}"
+    print(page_insight_url)
+
+
+
+

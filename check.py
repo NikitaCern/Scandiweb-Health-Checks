@@ -1,8 +1,4 @@
 import time
-import requests
-import sys
-import shutil
-import tempfile
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.common.keys import Keys
@@ -12,14 +8,14 @@ from checks.application import check_application
 from checks.performance import check_performance
 from checks.security import check_security
 from checks.eCommerce import check_eCommerce
-from print_helper import color_red
+from print_helper import color, show_error
 
 def check_health(url):
     try:
         page_source, console_output, networking, backendPerformance= page_load(url)
     except:
-        print (color_red("Cannot connect to website"))
-        print(color_red(f"Error: {sys.exc_info()}"))
+        print(color("Cannot connect to website", "red"))
+        show_error()
         return  
 
     url = url[:-1]
@@ -43,7 +39,7 @@ def page_load(url):
     capabilities['goog:loggingPrefs'] = { 'browser':'ALL'}
     capabilities['goog:loggingPrefs'] = { "performance":"ALL" }
 
-    driver = webdriver.Chrome(executable_path='/home/scandiweb/github/Scandiweb-Health-Checks/chromedriver', chrome_options=options, desired_capabilities=capabilities)
+    driver = webdriver.Chrome(executable_path='chromedriver', chrome_options=options, desired_capabilities=capabilities)
     driver.get(url)
     time.sleep(10)
     

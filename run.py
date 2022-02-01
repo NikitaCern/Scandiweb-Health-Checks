@@ -1,14 +1,20 @@
 from check import check_health
-from print_helper import bold, color_text, print_header
+from print_helper import bold, color, print_header, dark
 import colorama
+import re
 
 if __name__ == '__main__':
     colorama.init()
     print_header()
     print(bold("Enter the url ("), end="")
-    print(color_text(" https://www.example.com/  ", "grey"), end="")
+    print(dark("https://www.example.com/"), end="")
     print(bold(") of the project you want to check: "), end="")
 
-    url = input()
-    url = url.strip()
+    pattern = re.compile('^http["s"]?:\/\/www[.]([^\/]*)[.]([^\/]*)\/$')
+    url = input().strip()
+
+    while pattern.fullmatch(url) is None:
+        print(f"Make sure the URL is similar to this: {color('https://www.example.com/ : ', 'red')}", end="") 
+        url = input().strip()
+
     check_health(url)

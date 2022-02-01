@@ -2,7 +2,7 @@
 import enum
 import json
 import sys
-from print_helper import category, color_green, color_red, color_text, color_yellow
+from print_helper import category, color, dark, show_error
 
 
 def check_application(url, console_output, networking):
@@ -14,15 +14,15 @@ def check_application(url, console_output, networking):
     networking_404(networking)
 
 def uptime():
-    print(color_text("\tUptime:","grey"))
+    print(dark("\tUptime:"))
     pass
 
 def magento_error_log():
-    print(color_text("\tMagento error log:","grey"))
+    print(dark("\tMagento error log:"))
     pass
 
 def cache_enabled():
-    print(color_text("\tMagento cache enabled:","grey"))
+    print(dark("\tMagento cache enabled:"))
     pass
 
 def console_errors(console_output):
@@ -30,16 +30,16 @@ def console_errors(console_output):
 
     try:
         if not console_output:
-            print(color_green("No console errors found!"))
+            print(color("No console errors found!","green"))
 
-        print(color_yellow(" Console errors found!"))
+        print(color(" Console errors found!","yellow"))
         map = {}
         for output in console_output:
             key = ""
             if output['level'] == "WARNING" or output['level'] == "SEVERE":
-                key =  f"{color_red(output['level'])} :: {output['message'][:60]}..."
+                key =  f"{color(output['level'], 'red')} :: {output['message'][:60]}..."
             else:
-                key = f"{color_yellow(output['level'])} :: {output['message'][:60]}..."
+                key = f"{color(output['level'],'yellow')} :: {output['message'][:60]}..."
 
             if key not in map.keys():
                 map[key] = []
@@ -70,7 +70,7 @@ def console_errors(console_output):
                 if print_count >=5:
                     return
     except:
-        print(color_red(f"Error: {sys.exc_info()[0]}"))
+        show_error()
 
 def networking_404(networking):
     print("\tNetworking 404: ", end="")
@@ -85,14 +85,14 @@ def networking_404(networking):
                         "code": log["params"]["statusCode"],
                         "log": log
                         })
-
         if missing:
             print(missing)
             return
         
-        print(color_green(f"No networking errors found!"))
+        print(color(f"No networking errors found!", "green"))
     except:
-        print(color_red(f"Error: {sys.exc_info()[0]}"))
+        show_error()
+
 # 'Network.requestWillBeSent': '',
 # 'Network.requestWillBeSentExtraInfo': '',
 # 'Network.responseReceivedExtraInfo': '',
