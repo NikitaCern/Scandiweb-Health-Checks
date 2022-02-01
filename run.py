@@ -1,7 +1,7 @@
+import re
+import colorama
 from check import check_health
 from print_helper import bold, color, print_header, dark
-import colorama
-import re
 
 if __name__ == '__main__':
     colorama.init()
@@ -14,7 +14,7 @@ if __name__ == '__main__':
     url = input().strip()
 
     while pattern.fullmatch(url) is None:
-        print(f"Make sure the URL is similar to this: {color('https://www.example.com/ : ', 'red')}", end="") 
+        print(f"Make sure the URL is similar to this: {color('https://www.example.com/ : ', 'red')}", end="")
         url = input().strip()
 
     check_health(url)

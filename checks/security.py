@@ -17,17 +17,16 @@ def check_security(url):
 def magento_admin_url(url):
     print("\tMagento admin url:")
     danger_list = ['/admin', '/magento', '/magento/admin', '/backend']
-    
+
     for item in danger_list:
         temp_url = url + item
         try:
-            r = requests.get(temp_url)
-            if r.status_code == 200:
-                print(f"\t {color(r, 'red')} {r.url}")
+            request = requests.get(temp_url)
+            if request.status_code == 200:
+                print(f"\t {color(request, 'red')} {request.url}")
         except:
             show_error()
-            
-        
+
 def sensitive_urls(url):
     print("\tSensitive urls:")
     danger_list = ['/dev', '/.git', '/admin', '/rss', '/app/etc/local.xml', '/info.php']
@@ -57,25 +56,25 @@ def SSL_expiration(url):
         with socket.create_connection((hostname, port)) as sock:
             with context.wrap_socket(sock, server_hostname = hostname) as ssock:
                 certificate = ssock.getpeercert()
-        
-        certExpires = datetime.datetime.strptime(certificate['notAfter'], '%b %d %H:%M:%S %Y %Z')
-        monthsToExpiration = round((certExpires - datetime.datetime.now()).days/30)
+
+        cert_expires = datetime.datetime.strptime(certificate['notAfter'], '%b %d %H:%M:%S %Y %Z')
+        months_to_expiration = round((cert_expires - datetime.datetime.now()).days/30)
 
         text_color = "green"
 
-        if monthsToExpiration <= 5: text_color="cyan"
-        if monthsToExpiration <= 3: text_color="yellow"
-        if monthsToExpiration <= 2: text_color="red"
-        
-        print(color(f"Good for ~{monthsToExpiration} months [{certExpires.strftime('%d %b %Y')}]", text_color))
+        if months_to_expiration <= 5: text_color="cyan"
+        if months_to_expiration <= 3: text_color="yellow"
+        if months_to_expiration <= 2: text_color="red"
+
+        print(color(
+                f"Good for ~{months_to_expiration} months [{cert_expires.strftime('%d %b %Y')}]",
+                text_color))
 
     except:
         show_error()
 
 def admin_users():
     print(dark("\tAdmin users:"))
-    pass
 
 def non_commited_changes():
     print(dark("\tNon-commited changes:"))
-    pass

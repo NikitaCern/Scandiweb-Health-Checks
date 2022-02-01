@@ -1,7 +1,4 @@
-import sys
-import time
 import requests
-from bs4 import BeautifulSoup
 from print_helper import category, color, bold, show_error
 
 def check_eCommerce(url, page_source):
@@ -22,16 +19,16 @@ def google_tag_manager(page_source):
         if script['src'].find("googletagmanager")>0:
             matched_lines.append(script['src'])
 
-    if not matched_lines:
+    if len(matched_lines) < 1:
         response += color("No Google tag manager found!", "red")
         print(response)
         return
-    
+
     response += color("Google tag manager present!", "green")
 
     for line in matched_lines:
         response += f" [{line}]"
-    
+
     print(response)
 
 def robots_txt(url):
@@ -50,7 +47,7 @@ def robots_txt(url):
 
 def sitemap(contents):
     print(bold("\tSitemap.xml:"), end="")
-
+    
     if contents is  None:
         print(color(" No sitemap found!", "red"))
         return
@@ -58,7 +55,7 @@ def sitemap(contents):
     matched_lines = [line for line in contents.split('\n') if "Sitemap: " in line]
     text = f" Found {len(matched_lines)} sitemaps:"
 
-    if not len(matched_lines):
+    if len(matched_lines) < 1:
         print(color(text, "red"))
         return
 
@@ -74,17 +71,17 @@ def sitemap(contents):
 def url_exists_not_empty(url):
     response = ""
     try:
-        r = requests.get(url)
-        if r.status_code != 200:
-            response += color("Does not exist! " + str(r), "red")
+        request = requests.get(url)
+        if request.status_code != 200:
+            response += color("Does not exist! " + str(request), "red")
             return response, None
         response += color("Exists and is ", "green")
-        if not r.text:
+        if not request.text:
             response += color("empty ", "red")
             return response, None
         response += color("not empty ", "green")
         response += f"[{url}]"
-        return response, r.text
+        return response, request.text
     except:
         show_error()
         return "" , ""

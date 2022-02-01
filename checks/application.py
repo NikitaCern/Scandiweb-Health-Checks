@@ -1,11 +1,7 @@
-
-import enum
 import json
-import sys
 from print_helper import category, color, dark, show_error
 
-
-def check_application(url, console_output, networking):
+def check_application(console_output, networking):
     print(category("Checking application:"))
     uptime()
     magento_error_log()
@@ -15,15 +11,12 @@ def check_application(url, console_output, networking):
 
 def uptime():
     print(dark("\tUptime:"))
-    pass
 
 def magento_error_log():
     print(dark("\tMagento error log:"))
-    pass
 
 def cache_enabled():
     print(dark("\tMagento cache enabled:"))
-    pass
 
 def console_errors(console_output):
     print("\tConsole errors:", end="")
@@ -45,17 +38,15 @@ def console_errors(console_output):
                 map[key] = []
 
             map[key].append(f" {output['message']}")
-            
+
         ordered_output = {}
         for key, value in map.items():
             if len(value) not in ordered_output.keys():
                 ordered_output[len(value)] = []
-            ordered_output[len(value)].append(
-                { 
+            ordered_output[len(value)].append({
                     "key": key,
                     "values": value
-                }
-                )
+                })
 
         outputs = list(reversed(sorted(ordered_output.keys())))
         print_count = 0
@@ -77,7 +68,7 @@ def networking_404(networking):
 
     missing = []
     try:
-        for x, entry in enumerate(networking):
+        for entry in networking:
             log = json.loads(entry["message"])["message"]
             if log["method"].find("Network") > 0:
                 if log["params"]["statusCode"] >= 300:
@@ -88,16 +79,9 @@ def networking_404(networking):
         if missing:
             print(missing)
             return
-        
-        print(color(f"No networking errors found!", "green"))
+
+        print(color(
+            "No networking errors found!",
+            "green"))
     except:
         show_error()
-
-# 'Network.requestWillBeSent': '',
-# 'Network.requestWillBeSentExtraInfo': '',
-# 'Network.responseReceivedExtraInfo': '',
-# 'Network.responseReceived': '',
-# 'Network.dataReceived': '',
-# 'Network.loadingFinished': '',
-# 'Network.requestServedFromCache': '',
-# 'Network.resourceChangedPriority': '',
