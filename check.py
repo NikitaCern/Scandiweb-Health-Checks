@@ -1,4 +1,5 @@
 import time
+import os
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -42,7 +43,7 @@ def page_load(url):
     capabilities['goog:loggingPrefs'] = { "performance":"ALL" }
 
     driver = webdriver.Chrome(
-        executable_path='chromedriver',
+        executable_path=f"{os.getcwd()}/chromedriver",
         chrome_options=options,
         desired_capabilities=capabilities
     )
