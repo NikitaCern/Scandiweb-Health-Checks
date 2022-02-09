@@ -12,20 +12,21 @@ from print_helper import color, show_error
 
 TIME_TO_WAIT = 10
 
-def check_health(url):
+def check_health(FE_url, BE_url):
     try:
-        page_source, console_output, networking, backend_performance= page_load(url)
+        page_source, console_output, networking, backend_performance= page_load(FE_url)
     except:
         print(color("Cannot connect to website", "red"))
         show_error()
         return
 
-    url = url[:-1]
+    FE_url = FE_url[:-1]
+    BE_url = BE_url[:-1]
     check_server()
     check_application(console_output, networking)
-    check_performance(url, backend_performance)
-    check_security(url)
-    check_eCommerce(url, page_source)
+    check_performance(FE_url, backend_performance)
+    check_security(FE_url, BE_url)
+    check_eCommerce(FE_url, page_source)
         
 def page_load(url):
 
